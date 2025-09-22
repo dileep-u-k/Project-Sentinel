@@ -24,6 +24,9 @@ jobs:
           toolchain: stable
 
       # --- THIS IS THE NEW STEP ---
+      - name: Install cargo-bpf
+        run: cargo install cargo-bpf
+
       - name: Build the eBPF program
         run: make build-bpf
 
