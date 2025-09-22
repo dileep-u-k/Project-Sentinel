@@ -28,17 +28,8 @@ jobs:
         with:
           toolchain: stable
       
-      # --- THIS IS THE FIX ---
-      - name: Install cargo-bpf for build script runner
-        run: |
-          # Use two separate echo commands to create a valid, multi-line TOML file.
-          mkdir -p ~/.cargo
-          echo '[net]' > ~/.cargo/config.toml
-          echo 'git-fetch-with-cli = true' >> ~/.cargo/config.toml
-          
-          # Now, install the tool.
-          cargo install cargo-bpf --git https://github.com/aya-rs/bpf-cargo --branch main
-
+      # The build script will automatically compile the eBPF code.
+      # No more 'cargo install' needed.
       - name: Check Rust Code
         run: |
           cd src

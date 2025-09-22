@@ -14,15 +14,8 @@ use tokio::signal;
 async fn main() -> anyhow::Result<()> {
     env_logger::init();
 
-    // UPDATED PATH: The path is now simpler because of the build script.
-    #[cfg(debug_assertions)]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../../target/bpfel-unknown-none/debug/exec-trace"
-    ))?;
-    #[cfg(not(debug_assertions))]
-    let mut bpf = Bpf::load(include_bytes_aligned!(
-        "../../../target/bpfel-unknown-none/release/exec-trace"
-    ))?;
+    // The build script now provides the path to the object file via an env var.
+    let mut bpf = Bpf::load(include_bytes_aligned!(env!("EBPF_OBJECT_PATH")))?;
 
     BpfLogger::init(&mut bpf).context("Failed to initialize eBPF logger")?;
 
@@ -30,7 +23,7 @@ async fn main() -> anyhow::Result<()> {
     program.load()?;
     program.attach("__x64_sys_execve", 0)
         .context("Failed to attach kprobe")?;
-    
+
     info!("eBPF program attached to execve syscall. Waiting for events...");
 
     let mut ring_buf = RingBuf::try_from(bpf.map_mut("rb")?)?;
