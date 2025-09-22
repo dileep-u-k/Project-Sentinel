@@ -28,20 +28,21 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-
+      
       # --- THIS IS THE DEFINITIVE FIX ---
-      # Use the official checkout action to clone the cargo-bpf repository
-      - name: Checkout cargo-bpf source code
+      - name: Checkout Aya repository (for cargo-bpf source)
         uses: actions/checkout@v4
         with:
-          repository: aya-rs/cargo-bpf
-          ref: 806a646
-          path: cargo-bpf-source
+          # CORRECT REPOSITORY: The tool lives inside the main 'aya' repo
+          repository: aya-rs/aya
+          # Use the main branch which is stable
+          ref: main
+          path: aya-source
 
-      # Now, build and install the tool from the checked-out source
-      - name: Build and Install cargo-bpf
+      - name: Build and Install cargo-bpf from source
         run: |
-          cd cargo-bpf-source
+          # CORRECT PATH: Go into the checked-out repo, then into the tool's directory
+          cd aya-source/cargo-bpf
           cargo install --path . --force
 
       - name: Build the eBPF program
