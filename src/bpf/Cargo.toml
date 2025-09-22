@@ -5,13 +5,11 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya-ebpf = "0.2"
-aya-log-ebpf = "0.2"
+# CORRECTED: Use the latest published versions
+aya-ebpf = "0.1.2"
+aya-log-ebpf = "0.1.2"
 sentinel-common = { path = "../common" }
 
-# This section tells cargo that our "binary" is the C file.
 [[bin]]
 name = "exec-trace"
 path = "exec_trace.c"
-
-# The incorrect [lib] section has been removed.

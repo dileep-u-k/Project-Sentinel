@@ -28,9 +28,9 @@ jobs:
         with:
           toolchain: stable
       
-      # The build script will automatically compile the eBPF code.
-      # No more 'cargo install' or Makefiles needed.
-      - name: Check Rust Code
+      - name: Build and Check Project
         run: |
+          # The build.rs script will automatically build the eBPF code
+          # during the cargo check command.
           cd src
           cargo check --workspace --verbose
