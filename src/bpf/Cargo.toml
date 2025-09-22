@@ -5,9 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-# CORRECTED: Use the latest published versions
-aya-ebpf = "0.1.2"
-aya-log-ebpf = "0.1.2"
+# CORRECTED: Use the latest published versions, which are 0.1.1
+aya-ebpf = "0.1.1"
+aya-log-ebpf = "0.1.1"
 sentinel-common = { path = "../common" }
 
 [[bin]]
