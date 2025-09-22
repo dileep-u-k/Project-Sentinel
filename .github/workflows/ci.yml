@@ -28,9 +28,8 @@ jobs:
         with:
           toolchain: stable
       
-      # The build.rs script needs this tool, but it's now a build-dependency
-      # Let's ensure it's available for the build script itself.
-      - name: Install cargo-bpf for build script runner
+      # The build.rs script still needs the cargo-bpf command available
+      - name: Install cargo-bpf for build.rs runner
         run: cargo install cargo-bpf --version 2.3.0 --locked
       
       - name: Check Rust Code
