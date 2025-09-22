@@ -28,8 +28,9 @@ jobs:
         with:
           toolchain: stable
       
-      - name: Install cargo-bpf (for build.rs)
-        run: cargo install cargo-bpf --version 4.0.0
+      # The build.rs script needs this tool
+      - name: Install cargo-bpf for build script
+        run: cargo install cargo-bpf --version 2.3.0
 
       - name: Check Rust Code
         run: |
