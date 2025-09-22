@@ -35,15 +35,19 @@ jobs:
       
       # --- THIS IS THE DEFINITIVE FIX ---
       - name: Install cargo-bpf (Modern Version)
-        # We specify a modern version of cargo-bpf that does not have the
-        # buggy bindgen dependency that was causing the build to crash.
-        run: cargo install cargo-bpf --version 4.0.0
+        run: |
+          # Unset the sparse protocol env var to work around a CI network issue
+          # where the sparse index fails to find existing packages.
+          unset CARGO_REGISTRIES_CRATES_IO_PROTOCOL
+          cargo install cargo-bpf --version 4.0.0
 
       - name: Build the eBPF program
         run: make build-bpf
 
       - name: Check Rust Code
         run: |
+          # Also unset here for consistency
+          unset CARGO_REGISTRIES_CRATES_IO_PROTOCOL
           rm -f src/Cargo.lock
           cd src
           cargo update
