@@ -28,9 +28,9 @@ jobs:
         with:
           toolchain: stable
       
-      # The build.rs script still needs the cargo-bpf command available
-      - name: Install cargo-bpf for build.rs runner
-        run: cargo install cargo-bpf --version 2.3.0 --locked
+      # The build.rs script still needs the cargo-bpf command, but a working version.
+      - name: Install cargo-bpf (for build.rs runner)
+        run: cargo install cargo-bpf --git https://github.com/aya-rs/bpf-cargo --branch main
       
       - name: Check Rust Code
         run: |
