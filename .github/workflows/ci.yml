@@ -1,0 +1,43 @@
+# ==============================================================================
+# Project Sentinel: Continuous Integration (CI) Pipeline
+#
+# Description:
+#   This workflow runs on every push and pull request to the main branch.
+#   It performs essential checks to maintain code quality and correctness.
+# ==============================================================================
+
+name: Build and Lint
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Lint all shell scripts for errors and best practices
+      - name: Lint Shell Scripts
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: './scripts'
+
+      # Step 3: Set up the Rust toolchain
+      - name: Setup Rust Toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      # Step 4: Check the Rust agent code for compilation errors
+      # 'cargo check' is a fast way to ensure the code builds without
+      # producing a final binary.
+      - name: Check Rust Agent Code
+        run: |
+          cd src/agent
+          cargo check --verbose

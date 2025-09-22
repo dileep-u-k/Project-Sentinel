@@ -1,0 +1,76 @@
+# ==============================================================================
+# Project Sentinel: Kube Prometheus Stack Helm Chart Values
+#
+# Description:
+#   Configuration for the prometheus-community/kube-prometheus-stack chart.
+#   This deploys Prometheus and Grafana following production-grade practices
+#   for security, resource management, and GitOps.
+# Chart Repository: https://github.com/prometheus-community/helm-charts
+# ==============================================================================
+
+# Disable Alertmanager as it's not needed for the project's core focus.
+alertmanager:
+  enabled: false
+
+# --- Grafana Configuration ---
+grafana:
+  enabled: true
+
+  # Production-Grade Secret Management for Grafana Admin
+  # We AVOID hardcoding passwords. Instead, we use an existing K8s secret.
+  # Create the secret before deploying:
+  # kubectl create secret generic grafana-sentinel-secret --from-literal=admin-password='your_strong_password_here' -n sentinel
+  admin:
+    existingSecret: "grafana-sentinel-secret"
+    userKey: admin-user # Default, can be omitted
+    passwordKey: admin-password
+
+  # Production-Grade "Dashboards as Code" (GitOps)
+  # This enables Grafana to automatically find and load dashboards
+  # that are defined as code in Kubernetes ConfigMaps.
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: "ALL" # Scans all namespaces for dashboard ConfigMaps
+
+  # Production-Grade Resource Management
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "300m"
+
+  # Development-Specific Settings
+  # For local dev, we disable persistence. In production, this would use a StorageClass.
+  persistence:
+    enabled: false
+
+# --- Prometheus Configuration ---
+prometheus:
+  enabled: true
+  
+  prometheusSpec:
+    # CRITICAL: This allows Prometheus to discover ServiceMonitors in ANY namespace.
+    # This is essential for scraping metrics from Kafka, ClickHouse, and our future agent.
+    serviceMonitorSelectorNilUsesHelmValues: false
+
+    # Production-Grade Retention Policy
+    # Explicitly set a data retention period to manage storage.
+    # For a dev environment, a short period is sufficient.
+    retention: 24h
+
+    # Production-Grade Resource Management
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "2Gi"
+        cpu: "1"
+
+    # Development-Specific Settings
+    # Use ephemeral storage for metrics in the dev environment.
+    storageSpec:
+      emptyDir: {}

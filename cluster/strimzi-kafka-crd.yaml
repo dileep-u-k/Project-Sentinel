@@ -1,0 +1,52 @@
+# ==============================================================================
+# Project Sentinel: Strimzi Kafka Cluster Definition (KRaft Mode)
+#
+# Description:
+#   This Kubernetes Custom Resource Definition (CRD) defines a simple,
+#   single-node, ZooKeeper-less (KRaft) Kafka cluster suitable for modern
+#   development. It is managed by the Strimzi Kafka Operator.
+# ==============================================================================
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: sentinel-kafka-cluster
+  # CRITICAL: Use the unified project namespace defined in env.sh.
+  namespace: sentinel
+  annotations:
+    sentinel.io/purpose: "Core event streaming bus for telemetry data"
+    sentinel.io/architecture: "KRaft (ZooKeeper-less)"
+spec:
+  kafka:
+    version: 3.7.0
+    # In KRaft mode, replicas act as both brokers and controllers.
+    replicas: 1
+    listeners:
+      # A plain listener for internal cluster communication on port 9092.
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+    # Use ephemeral storage for a lightweight local dev environment.
+    storage:
+      type: ephemeral
+    # Minimal resource requests for a local setup.
+    resources:
+      requests:
+        cpu: 250m
+        memory: 768Mi
+      limits:
+        cpu: 750m
+        memory: 1.5Gi
+    # Template for pod metadata, useful for labeling.
+    template:
+      pod:
+        metadata:
+          labels:
+            app.kubernetes.io/name: sentinel-kafka-broker
+  # The 'zookeeper' section is intentionally removed to enable KRaft mode.
+  # The Strimzi operator (v0.32.0+) will automatically deploy in KRaft
+  # if this section is omitted and the appropriate feature gates are enabled.
+  entityOperator:
+    # Disable User and Topic operators to keep the setup minimal.
+    topicOperator: {}
+    userOperator: {}

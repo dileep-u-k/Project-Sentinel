@@ -1,0 +1,54 @@
+# ==============================================================================
+# Project Sentinel: ClickHouse Helm Chart Values
+#
+# Description:
+#   Configuration values for the Bitnami ClickHouse Helm chart. This sets up
+#   a single, non-sharded ClickHouse instance for development, following
+#   production-grade security and resource management practices.
+# Chart Repository: https://github.com/bitnami/charts/tree/main/bitnami/clickhouse
+# ==============================================================================
+
+# Run as a single replica statefulset for the development environment.
+replicaCount: 1
+
+# Disable sharding and replication for a simple standalone deployment.
+sharding:
+  enabled: false
+
+# --- Production-Grade Secret Management ---
+# We explicitly AVOID storing plaintext passwords in this file.
+# The Helm chart will use a pre-existing Kubernetes Secret for authentication.
+# This secret must be created separately before deploying the chart.
+# Example command to create the secret:
+# kubectl create secret generic clickhouse-sentinel-secret --from-literal=clickhouse-password='your_strong_password_here' -n sentinel
+auth:
+  username: sentinel
+  # Do not specify 'password' or 'erasedPassword'.
+  # Instead, point to the secret that holds the password.
+  existingSecret: "clickhouse-sentinel-secret"
+  # The key within the secret that contains the password.
+  existingSecretKey: "clickhouse-password"
+
+# --- Production-Grade Resource Management ---
+# Define resource requests and limits to ensure predictable performance and
+# cluster stability, even in a development environment.
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
+
+# --- Professional Annotations ---
+# Add annotations to pods for easier identification and policy application.
+podAnnotations:
+  sentinel.io/component: "data-storage"
+  sentinel.io/tier: "backend"
+
+# --- Development-Specific Settings ---
+# Use ephemeral storage for the local development environment.
+# All data will be lost when pods are terminated. For a true production
+# setup, this would be enabled with a specific StorageClass.
+persistence:
+  enabled: false
