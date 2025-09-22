@@ -3,4 +3,10 @@ members = [
     "agent",
     "common",
 ]
-resolver = "2" # Add this line
+resolver = "2"
+
+# --- THIS IS THE FIX ---
+# This section forces all dependencies in the workspace to use a newer,
+# patched version of 'bindgen', which resolves the build failure.
+[patch.crates-io]
+bindgen = { version = "0.69.4" }
