@@ -23,17 +23,12 @@ jobs:
         with:
           toolchain: stable
 
-      # --- THIS IS THE NEW DEBUGGING STEP ---
-      - name: DEBUG - Display Cargo.toml content
-        run: |
-          echo "--- Contents of src/agent/Cargo.toml ---"
-          cat src/agent/Cargo.toml
-          echo "----------------------------------------"
+      # --- THIS IS THE NEW STEP ---
+      - name: Build the eBPF program
+        run: make build-bpf
 
       - name: Force Clean Rust Dependency Resolution
         run: |
-          rm -rf ~/.cargo/registry
-          rm -rf ~/.cargo/git
           rm -f src/Cargo.lock
           cd src
           cargo update

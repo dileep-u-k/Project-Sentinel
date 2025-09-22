@@ -7,9 +7,9 @@ publish = false
 [dependencies]
 sentinel-common = { path = "../common" }
 
-# THIS IS THE CORRECT DEPENDENCY
 aya = { version = "0.12", features = ["async_tokio"] }
-aya-log = "0.1"
+# --- UPDATED VERSION ---
+aya-log = "0.2"
 
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal"] }
 anyhow = "1"
