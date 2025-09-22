@@ -13,6 +13,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            clang \
+            libbpf-dev \
+            linux-headers-generic \
+            libelf-dev # <-- ADD THIS LINE
+
       - name: Lint Shell Scripts
         uses: ludeeus/action-shellcheck@2.0.0
         with:
@@ -22,15 +32,14 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-
-      # --- THIS IS THE NEW STEP ---
+      
       - name: Install cargo-bpf
         run: cargo install cargo-bpf
 
       - name: Build the eBPF program
         run: make build-bpf
 
-      - name: Force Clean Rust Dependency Resolution
+      - name: Check Rust Code
         run: |
           rm -f src/Cargo.lock
           cd src
