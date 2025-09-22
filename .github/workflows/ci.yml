@@ -18,27 +18,28 @@ jobs:
   build-and-lint:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the repository code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Lint all shell scripts for errors and best practices
       - name: Lint Shell Scripts
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: './scripts'
 
-      # Step 3: Set up the Rust toolchain
       - name: Setup Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
 
-      # Step 4: Check the Rust agent code for compilation errors
-      # 'cargo check' is a fast way to ensure the code builds without
-      # producing a final binary.
-      - name: Check agent code
+      # --- THIS IS THE DEFINITIVE FIX ---
+      - name: Force Clean Rust Dependency Resolution
         run: |
-          cd src/agent
+          # This is the most critical step. By deleting the lock file, we force
+          # cargo to rebuild its dependency tree from the correct .toml files,
+          # ignoring any bad cache from previous failed runs.
+          rm -f src/Cargo.lock
+          
+          # Now, running update and check will use the correct files.
+          cd src
           cargo update
-          cargo check --verbose
+          cargo check --workspace --verbose
