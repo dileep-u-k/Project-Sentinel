@@ -29,24 +29,18 @@ jobs:
         with:
           toolchain: stable
       
-      - name: Checkout Aya repository (for cargo-bpf source)
+      - name: Checkout Aya repository
         uses: actions/checkout@v4
         with:
           repository: aya-rs/aya
           ref: main
           path: aya-source
 
-      - name: Build and Install cargo-bpf from source
+      # --- THIS IS THE NEW DEBUGGING STEP ---
+      - name: List Directory Contents to Find Correct Path
         run: |
-          # --- THIS IS THE FIX ---
-          # The correct directory name is 'bpf-cargo'
-          cd aya-source/bpf-cargo
-          cargo install --path . --force
-
-      - name: Build the eBPF program
-        run: make build-bpf
-
-      - name: Check Rust Code
-        run: |
-          cd src
-          cargo check --workspace --verbose
+          echo "--- Listing contents of the 'aya-source' directory ---"
+          ls -lR aya-source
+          echo "------------------------------------------------------"
+          # The workflow will stop here so we can analyze the output.
+          # The next step will be to use the correct path found in the log.
