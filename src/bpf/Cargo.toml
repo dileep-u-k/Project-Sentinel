@@ -5,7 +5,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya-bpf = { git = "https://github.com/aya-rs/aya", branch = "main" }
+aya-bpf = "0.12"
+aya-log-ebpf = "0.2"
 sentinel-common = { path = "../common" }
 
 [[bin]]
@@ -14,7 +15,7 @@ path = "exec_trace.c"
 
 [profile.dev]
 opt-level = 3
-debug = false
+debug = 2
 debug-assertions = false
 overflow-checks = false
 lto = true
@@ -27,5 +28,4 @@ rpath = false
 lto = true
 panic = "abort"
 codegen-units = 1
-
-[workspace]
+rpath = false

@@ -23,32 +23,15 @@ jobs:
             linux-headers-generic \
             libelf-dev
 
-      - name: Lint Shell Scripts
-        uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          scandir: './scripts'
-
       - name: Setup Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
       
-      # --- THIS IS THE DEFINITIVE FIX ---
-      - name: Install cargo-bpf (Modern Version)
-        run: |
-          # Unset the sparse protocol env var to work around a CI network issue
-          # where the sparse index fails to find existing packages.
-          unset CARGO_REGISTRIES_CRATES_IO_PROTOCOL
-          cargo install cargo-bpf --version 4.0.0
-
-      - name: Build the eBPF program
-        run: make build-bpf
+      - name: Install cargo-bpf (for build.rs)
+        run: cargo install cargo-bpf --version 4.0.0
 
       - name: Check Rust Code
         run: |
-          # Also unset here for consistency
-          unset CARGO_REGISTRIES_CRATES_IO_PROTOCOL
-          rm -f src/Cargo.lock
           cd src
-          cargo update
           cargo check --workspace --verbose

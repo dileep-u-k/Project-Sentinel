@@ -6,12 +6,13 @@ publish = false
 
 [dependencies]
 sentinel-common = { path = "../common" }
-
 aya = { version = "0.12", features = ["async_tokio"] }
-# --- UPDATED VERSION ---
 aya-log = "0.2"
-
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal"] }
 anyhow = "1"
 env_logger = "0.10"
 log = "0.4"
+
+# This is the correct place for the builder dependency
+[build-dependencies]
+aya-builder = "0.1"
