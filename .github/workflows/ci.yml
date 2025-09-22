@@ -29,8 +29,9 @@ jobs:
           toolchain: stable
       
       # The build script will automatically compile the eBPF code.
-      # No more 'cargo install' needed.
       - name: Check Rust Code
         run: |
+          # Unset sparse protocol to fix package lookup errors in CI
+          unset CARGO_REGISTRIES_CRATES_IO_PROTOCOL
           cd src
           cargo check --workspace --verbose
