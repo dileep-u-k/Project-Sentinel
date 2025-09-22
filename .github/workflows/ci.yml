@@ -21,7 +21,7 @@ jobs:
             clang \
             libbpf-dev \
             linux-headers-generic \
-            libelf-dev # <-- ADD THIS LINE
+            libelf-dev
 
       - name: Lint Shell Scripts
         uses: ludeeus/action-shellcheck@2.0.0
@@ -33,8 +33,11 @@ jobs:
         with:
           toolchain: stable
       
-      - name: Install cargo-bpf
-        run: cargo install cargo-bpf
+      # --- THIS IS THE DEFINITIVE FIX ---
+      - name: Install cargo-bpf (Modern Version)
+        # We specify a modern version of cargo-bpf that does not have the
+        # buggy bindgen dependency that was causing the build to crash.
+        run: cargo install cargo-bpf --version 4.0.0
 
       - name: Build the eBPF program
         run: make build-bpf
