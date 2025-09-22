@@ -5,17 +5,12 @@ edition = "2021"
 publish = false
 
 [dependencies]
-# Local shared library
 sentinel-common = { path = "../common" }
 
-# --- THIS IS THE FIX ---
-# The correct crate name is 'aya', not 'aya-builder'.
-# We also specify the version and the required 'async_tokio' feature.
+# CORRECT DEPENDENCY
 aya = { version = "0.12", features = ["async_tokio"] }
 aya-log = "0.1"
-# --- END OF FIX ---
 
-# Asynchronous runtime and utilities
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal"] }
 anyhow = "1"
 env_logger = "0.10"
