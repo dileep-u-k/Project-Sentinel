@@ -15,6 +15,3 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal
 anyhow = "1"
 env_logger = "0.10"
 log = "0.4"
-
-[build-dependencies]
-aya-builder = "0.1"
