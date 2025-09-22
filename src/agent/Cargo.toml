@@ -14,4 +14,5 @@ env_logger = "0.10"
 log = "0.4"
 
 [build-dependencies]
-aya-builder = "0.1"
+# CORRECTED: Use the modern 'aya-build' crate
+aya-build = "0.2"

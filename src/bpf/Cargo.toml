@@ -5,10 +5,10 @@ edition = "2021"
 publish = false
 
 [dependencies]
-aya-bpf = "0.12"
+# CORRECTED: Use the modern 'aya-ebpf' crate
+aya-ebpf = "0.2"
 aya-log-ebpf = "0.2"
 sentinel-common = { path = "../common" }
 
-[[bin]]
-name = "exec-trace"
-path = "exec_trace.c"
+# This section is intentionally left blank in the modern system
+[lib]

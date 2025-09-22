@@ -6,7 +6,6 @@ members = [
 ]
 resolver = "2"
 
-# ADD THIS SECTION
 [workspace.profile.dev]
 opt-level = 3
 debug = 2
