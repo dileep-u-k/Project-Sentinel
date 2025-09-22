@@ -21,16 +21,28 @@ jobs:
             clang \
             libbpf-dev \
             linux-headers-generic \
-            libelf-dev
+            libelf-dev \
+            pkg-config # Add pkg-config for the build from source
 
       - name: Setup Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
-      
-      # The build.rs script needs this tool
-      - name: Install cargo-bpf for build script
-        run: cargo install cargo-bpf --version 2.3.0
+
+      # --- THIS IS THE DEFINITIVE FIX ---
+      # Instead of 'cargo install', we build 'cargo-bpf' from a specific
+      # git revision that is known to use a non-buggy version of bindgen.
+      - name: Build and Install cargo-bpf from source
+        run: |
+          git clone https://github.com/aya-rs/cargo-bpf.git
+          cd cargo-bpf
+          # Check out a specific, stable commit
+          git checkout 806a646
+          # Build and install into the runner's toolchain
+          cargo install --path . --force
+
+      - name: Build the eBPF program
+        run: make build-bpf
 
       - name: Check Rust Code
         run: |
