@@ -37,7 +37,6 @@ async fn main() -> anyhow::Result<()> {
 
     tokio::spawn(async move {
         loop {
-            // Wait for an event from the ring buffer.
             match ring_buf.read_async().await {
                 Ok(record) => {
                     let event_ptr = record.buf.as_ptr() as *const ExecEvent;

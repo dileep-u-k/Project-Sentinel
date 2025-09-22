@@ -21,26 +21,19 @@ jobs:
             clang \
             libbpf-dev \
             linux-headers-generic \
-            libelf-dev \
-            pkg-config
+            libelf-dev
 
       - name: Setup Rust Toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
       
-      - name: Checkout Aya repository
-        uses: actions/checkout@v4
-        with:
-          repository: aya-rs/aya
-          ref: main
-          path: aya-source
-
-      # --- THIS IS THE NEW DEBUGGING STEP ---
-      - name: List Directory Contents to Find Correct Path
+      # The build.rs script needs this tool, but it's now a build-dependency
+      # Let's ensure it's available for the build script itself.
+      - name: Install cargo-bpf for build script runner
+        run: cargo install cargo-bpf --version 2.3.0 --locked
+      
+      - name: Check Rust Code
         run: |
-          echo "--- Listing contents of the 'aya-source' directory ---"
-          ls -lR aya-source
-          echo "------------------------------------------------------"
-          # The workflow will stop here so we can analyze the output.
-          # The next step will be to use the correct path found in the log.
+          cd src
+          cargo check --workspace --verbose

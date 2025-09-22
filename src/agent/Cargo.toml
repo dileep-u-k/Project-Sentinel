@@ -13,6 +13,5 @@ anyhow = "1"
 env_logger = "0.10"
 log = "0.4"
 
-# This is the correct place for the builder dependency
 [build-dependencies]
 aya-builder = "0.1"
