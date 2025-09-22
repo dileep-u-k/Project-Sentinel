@@ -3,3 +3,4 @@ members = [
     "agent",
     "common",
 ]
+resolver = "2" # Add this line
