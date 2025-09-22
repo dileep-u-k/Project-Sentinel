@@ -1,11 +1,3 @@
-# ==============================================================================
-# Project Sentinel: Continuous Integration (CI) Pipeline
-#
-# Description:
-#   This workflow runs on every push and pull request to the main branch.
-#   It performs essential checks to maintain code quality and correctness.
-# ==============================================================================
-
 name: Build and Lint
 
 on:
@@ -34,12 +26,15 @@ jobs:
       # --- THIS IS THE DEFINITIVE FIX ---
       - name: Force Clean Rust Dependency Resolution
         run: |
-          # This is the most critical step. By deleting the lock file, we force
-          # cargo to rebuild its dependency tree from the correct .toml files,
-          # ignoring any bad cache from previous failed runs.
+          # Deep clean: Remove the global cargo caches that might be corrupted.
+          # This is the most forceful way to ensure a clean build.
+          rm -rf ~/.cargo/registry
+          rm -rf ~/.cargo/git
+
+          # Remove the local lock file to be absolutely sure.
           rm -f src/Cargo.lock
           
-          # Now, running update and check will use the correct files.
+          # Now, run the build from a 100% clean state.
           cd src
           cargo update
           cargo check --workspace --verbose
