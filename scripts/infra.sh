@@ -11,6 +11,8 @@
 
 # --- Script Setup ---
 set -euo pipefail
+
+# shellcheck disable=SC1091
 source "$(dirname "$0")/env.sh" || exit 1
 
 # --- Helper Functions for Colored Output ---
