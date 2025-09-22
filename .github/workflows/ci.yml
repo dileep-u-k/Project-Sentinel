@@ -29,20 +29,18 @@ jobs:
         with:
           toolchain: stable
       
-      # --- THIS IS THE DEFINITIVE FIX ---
       - name: Checkout Aya repository (for cargo-bpf source)
         uses: actions/checkout@v4
         with:
-          # CORRECT REPOSITORY: The tool lives inside the main 'aya' repo
           repository: aya-rs/aya
-          # Use the main branch which is stable
           ref: main
           path: aya-source
 
       - name: Build and Install cargo-bpf from source
         run: |
-          # CORRECT PATH: Go into the checked-out repo, then into the tool's directory
-          cd aya-source/cargo-bpf
+          # --- THIS IS THE FIX ---
+          # The correct directory name is 'bpf-cargo'
+          cd aya-source/bpf-cargo
           cargo install --path . --force
 
       - name: Build the eBPF program
