@@ -28,15 +28,15 @@ jobs:
         with:
           toolchain: stable
       
-      # --- THIS IS THE DEFINITIVE FIX ---
-      - name: Install cargo-bpf for build.rs runner
+      # --- THIS IS THE FIX ---
+      - name: Install cargo-bpf for build script runner
         run: |
-          # Create a cargo config file to use the git CLI for fetching,
-          # which solves authentication issues in CI.
+          # Use two separate echo commands to create a valid, multi-line TOML file.
           mkdir -p ~/.cargo
-          echo '[net]\ngit-fetch-with-cli = true' > ~/.cargo/config.toml
+          echo '[net]' > ~/.cargo/config.toml
+          echo 'git-fetch-with-cli = true' >> ~/.cargo/config.toml
           
-          # Now, install the tool from the correct git repository.
+          # Now, install the tool.
           cargo install cargo-bpf --git https://github.com/aya-rs/bpf-cargo --branch main
 
       - name: Check Rust Code
