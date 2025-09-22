@@ -37,7 +37,8 @@ jobs:
       # Step 4: Check the Rust agent code for compilation errors
       # 'cargo check' is a fast way to ensure the code builds without
       # producing a final binary.
-      - name: Check Rust Agent Code
+      - name: Check agent code
         run: |
           cd src/agent
+          cargo update
           cargo check --verbose
